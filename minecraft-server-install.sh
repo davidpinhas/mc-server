@@ -3,14 +3,19 @@
 #########################################
 ##### Minecraft Installation Script #####
 #########################################
+figlet Minecraft Installation Script
 
 # Install prerequisites
 echo "INFO: Installing prerequisites"
-sudo add-apt-repository ppa:openjdk-r/ppa -y  > /dev/null 2>&1
-sudo apt update  > /dev/null 2>&1
-sudo apt install apt-transport-https curl gnupg-agent ca-certificates software-properties-common -y  > /dev/null 2>&1
+if [[ $(grep -rhE ^deb /etc/apt/sources.list* | grep openjdk-r) ]]; then
+    echo "INFO: OpenJDK repository already exists"
+else
+    echo "Adding OpenJDK repository"
+    sudo add-apt-repository ppa:openjdk-r/ppa -y  > /dev/null 2>&1
+fi
 
-# Install Docker
+sudo apt update  > /dev/null 2>&1
+sudo apt install apt-transport-https curl gnupg-agent ca-certificates software-properties-common figlet -y  > /dev/null 2>&1
 if [ -x "$(command -v docker)" ]; then
     echo "INFO: Docker client already installed. Proceeding"
 else
@@ -22,8 +27,26 @@ else
 	newgrp docker
 fi
 
+
+# Install Docker
+if [ -x "$(command -v docker)" ]; then
+    echo "INFO: Docker client already installed. Proceeding"
+else
+    echo "INFO: Installing Docker client"
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - 
+    if [[ $(grep -rhE ^deb /etc/apt/sources.list* | grep docker) ]]; then
+    echo "INFO: Docker repository already exists"
+    else
+        echo "Adding Docker repository"
+        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable" -y > /dev/null 2>&1
+    fi
+	sudo apt install docker-ce docker-ce-cli containerd.io -y  > /dev/null 2>&1
+	sudo usermod -aG docker $USER
+	newgrp docker
+fi
+
 # Starting Docker service
-echo "Info: Starting and enabling Docker client"
+echo "Info: Starting and enabling the Docker client"
 sudo systemctl start docker > /dev/null 2>&1
 sudo systemctl enable docker > /dev/null 2>&1
 if [ -d "/home/$USER/minecraft-data" ] 
