@@ -59,12 +59,18 @@ echo "INFO: Checking Docker container status."
 if [ ! "$(docker ps -q -f name=mc-server)" ]; then
     if [ "$(docker ps -aq -f status=exited -f name=mc-server)" ]; then
         # cleanup
-        sudo docker rm mc-server  > /dev/null 2>&1
+        sudo docker rm -f mc-server > /dev/null 2>&1
         echo "INFO: Cleaned exited container."
     fi
     # run your container
     echo "INFO: Deploying Minecraft server Docker container."
-    sudo docker run -d -it -p 25565:25565 --name mc-server  -e EULA=TRUE --restart unless-stopped -v /etc/mc-server/minecraft-data:/data itzg/minecraft-server > /dev/null 2>&1
+    sudo docker run -d -it -p 25565:25565 --name mc-server -e EULA=TRUE --restart unless-stopped -v /etc/mc-server/minecraft-data:/data itzg/minecraft-server > /dev/null 2>&1
+    echo "INFO: Waiting for mc-server data files to copy from the Docker container."
+    while [ $(ls -l /etc/mc-server/minecraft-data | wc -l) != 13 ]
+    do
+        echo "INFO:" $(ls -l /etc/mc-server/minecraft-data | wc -l) echo "out of 13 copied. Waiting 5 seconds."
+        sleep 5
+    done
 fi
 # Setting up server backup job
 echo "INFO: Copying backup script to bin directory"
@@ -92,4 +98,4 @@ Minecraft server data location:
 
 This directory will be used to store the servers configuration files and data.
 
-The backup script will run everyday at 12AM"
+The backup script will run everyday at 12AM."
