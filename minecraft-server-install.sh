@@ -46,7 +46,7 @@ if [ ! "$(docker ps -q -f name=mc-server)" ]; then
     fi
     # run your container
     echo "INFO: Deploying Minecraft server Docker container"
-    sudo docker run -d -it -p 25565:25565 --name mc-server --restart unless-stopped -v /home/$USER/minecraft-data:/data itzg/minecraft-server
+    sudo docker run -d -it -p 25565:25565 --name mc-server  -e EULA=TRUE --restart unless-stopped -v /home/$USER/minecraft-data:/data itzg/minecraft-server
 fi
 # Setting up server backup job
 cp mc-backup.sh /usr/bin/mc-backup.sh
