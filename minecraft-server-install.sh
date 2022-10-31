@@ -10,7 +10,7 @@ if [[ $(/usr/bin/id -u) -ne 0 ]]; then
 fi
 
 external_ip=$(dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com)
-figlet Minecraft Installation Script
+figlet Minecraft Installation
 
 # Install prerequisites
 echo "INFO: Installing prerequisites."
@@ -67,12 +67,29 @@ if [ ! "$(docker ps -q -f name=mc-server)" ]; then
     sudo docker run -d -it -p 25565:25565 --name mc-server  -e EULA=TRUE --restart unless-stopped -v /etc/mc-server/minecraft-data:/data itzg/minecraft-server > /dev/null 2>&1
 fi
 # Setting up server backup job
+echo "INFO: Copying backup script to bin directory"
 sudo cp mc-backup.sh /usr/bin/mc-backup.sh
+echo "Setting backup script with cron"
+#write out current crontab
+crontab -l > mc-cron
+#echo new cron into cron file
+echo "0 0 * * * mc-backup.sh" >> mc-cron
+#install new cron file
+crontab mc-cron
+echo "INFO: Successfully setup cron job to automate backups."
+echo "INFO: Removing temp cron file."
+rm mc-cron
+
 echo "INFO: Minecraft server installation script finished."
-echo "##### Minecraft server information #####
-Minecraft server endpoint:
-$external_ip:25565
+echo "
+##### MINECRAFT SERVER INFO #####
+
+Minecraft server endpoint:"
+echo "$(echo $external_ip | tr -d '"'):25565"
+echo "
+Minecraft server data location:
+/etc/mc-server/minecraft-data
 
 This directory will be used to store the servers configuration files and data.
-Minecraft server data location:
-/etc/mc-server/minecraft-data"
+
+The backup script will run everyday at 12AM"
