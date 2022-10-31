@@ -49,5 +49,5 @@ if [ ! "$(docker ps -q -f name=mc-server)" ]; then
     sudo docker run -d -it -p 25565:25565 --name mc-server  -e EULA=TRUE --restart unless-stopped -v /home/$USER/minecraft-data:/data itzg/minecraft-server
 fi
 # Setting up server backup job
-cp mc-backup.sh /usr/bin/mc-backup.sh
+sudo cp mc-backup.sh /usr/bin/mc-backup.sh
 echo "INFO: Minecraft server installation script finished"
