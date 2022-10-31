@@ -9,6 +9,7 @@ if [[ $(/usr/bin/id -u) -ne 0 ]]; then
     exit
 fi
 
+external_ip=$(dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com)
 figlet Minecraft Installation Script
 
 # Install prerequisites
@@ -44,13 +45,13 @@ fi
 echo "INFO: Starting and enabling the Docker client"
 sudo systemctl start docker > /dev/null 2>&1
 sudo systemctl enable docker > /dev/null 2>&1
-if [ -d "/home/$USER/minecraft-data" ] 
+if [ -d "/etc/mc-server/minecraft-data" ] 
 then
-    echo "INFO: Directory /home/$USER/minecraft-data exists. This directory will be used to store the servers configuration files and data" 
+    echo "INFO: Directory /etc/mc-server/minecraft-data exists." 
 else
-    echo "WARN: Directory '/home/$USER/minecraft-data' does not exists."
-    echo "INFO: Creating directory"
-    sudo mkdir /home/$USER/minecraft-data # Creating Docker volume directory to store MC server configuration files
+    echo "WARN: Directory '/etc/mc-server/minecraft-data' does not exists."
+    echo "INFO: Creating directory /etc/mc-server/minecraft-data"
+    sudo mkdir /etc/mc-server/minecraft-data # Creating Docker volume directory to store MC server configuration files
 fi
 
 # Running Minecraft Server as a Docker container
@@ -63,8 +64,15 @@ if [ ! "$(docker ps -q -f name=mc-server)" ]; then
     fi
     # run your container
     echo "INFO: Deploying Minecraft server Docker container"
-    sudo docker run -d -it -p 25565:25565 --name mc-server  -e EULA=TRUE --restart unless-stopped -v /home/$USER/minecraft-data:/data itzg/minecraft-server > /dev/null 2>&1
+    sudo docker run -d -it -p 25565:25565 --name mc-server  -e EULA=TRUE --restart unless-stopped -v /etc/mc-server/minecraft-data:/data itzg/minecraft-server > /dev/null 2>&1
 fi
 # Setting up server backup job
 sudo cp mc-backup.sh /usr/bin/mc-backup.sh
 echo "INFO: Minecraft server installation script finished"
+echo "Minecraft server information:
+Minecraft server endpoint:
+$external_ip:25565
+
+This directory will be used to store the servers configuration files and data.
+Minecraft server data location:
+/etc/mc-server/minecraft-data"
