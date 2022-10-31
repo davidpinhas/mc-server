@@ -6,7 +6,7 @@
 
 # Install prerequisites
 echo "INFO: Installing prerequisites"
-sudo add-apt-repository ppa:openjdk-r/ppa
+sudo add-apt-repository ppa:openjdk-r/ppa -y
 sudo apt update
 sudo apt install apt-transport-https curl gnupg-agent ca-certificates software-properties-common -y
 
