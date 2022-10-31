@@ -24,8 +24,8 @@ fi
 
 # Starting Docker service
 echo "Info: Starting and enabling Docker client"
-sudo systemctl start docker
-sudo systemctl enable docker
+sudo systemctl start docker > /dev/null 2>&1
+sudo systemctl enable docker > /dev/null 2>&1
 if [ -d "/home/$USER/minecraft-data" ] 
 then
     echo "Directory /home/$USER/minecraft-data exists. This directory will be used to store the servers configuration files and data" 
