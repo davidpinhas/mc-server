@@ -4,7 +4,7 @@
 ##### Minecraft Installation Script #####
 #########################################
 if [[ $(/usr/bin/id -u) -ne 0 ]]; then
-    echo "WARN: Not Sudo user. Please run as root, using the following command:\n"
+    echo "WARN: Not Sudo user. Please run as root, using the following command:"
     echo "$ sudo bash minecraft-server-install.sh"
     exit
 fi
@@ -13,11 +13,11 @@ external_ip=$(dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com)
 figlet Minecraft Installation Script
 
 # Install prerequisites
-echo "INFO: Installing prerequisites"
+echo "INFO: Installing prerequisites."
 if [[ $(grep -rhE ^deb /etc/apt/sources.list* | grep openjdk-r) ]]; then
-    echo "INFO: OpenJDK repository already exists"
+    echo "INFO: OpenJDK repository already exists."
 else
-    echo "Adding OpenJDK repository"
+    echo "Adding OpenJDK repository."
     sudo add-apt-repository ppa:openjdk-r/ppa -y  > /dev/null 2>&1
 fi
 
@@ -26,14 +26,14 @@ sudo apt install apt-transport-https curl gnupg-agent ca-certificates software-p
 
 # Install Docker
 if [ -x "$(command -v docker)" ]; then
-    echo "INFO: Docker client already installed. Proceeding"
+    echo "INFO: Docker client already installed. Proceeding."
 else
-    echo "INFO: Installing Docker client"
+    echo "INFO: Installing Docker client."
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - 
     if [[ $(grep -rhE ^deb /etc/apt/sources.list* | grep docker) ]]; then
-        echo "INFO: Docker repository already exists"
+        echo "INFO: Docker repository already exists."
     else
-        echo "Adding Docker repository"
+        echo "Adding Docker repository."
         sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable" -y > /dev/null 2>&1
     fi
 	sudo apt install docker-ce docker-ce-cli containerd.io -y  > /dev/null 2>&1
@@ -42,7 +42,7 @@ else
 fi
 
 # Starting Docker service
-echo "INFO: Starting and enabling the Docker client"
+echo "INFO: Starting and enabling the Docker client."
 sudo systemctl start docker > /dev/null 2>&1
 sudo systemctl enable docker > /dev/null 2>&1
 if [ -d "/etc/mc-server/minecraft-data" ] 
@@ -50,26 +50,26 @@ then
     echo "INFO: Directory /etc/mc-server/minecraft-data exists." 
 else
     echo "WARN: Directory '/etc/mc-server/minecraft-data' does not exists."
-    echo "INFO: Creating directory /etc/mc-server/minecraft-data"
-    sudo mkdir /etc/mc-server/minecraft-data # Creating Docker volume directory to store MC server configuration files
+    echo "INFO: Creating directory /etc/mc-server/minecraft-data."
+    sudo mkdir -p /etc/mc-server/minecraft-data # Creating Docker volume directory to store MC server configuration files
 fi
 
 # Running Minecraft Server as a Docker container
-echo "INFO: Checking Docker container status"
+echo "INFO: Checking Docker container status."
 if [ ! "$(docker ps -q -f name=mc-server)" ]; then
     if [ "$(docker ps -aq -f status=exited -f name=mc-server)" ]; then
         # cleanup
         sudo docker rm mc-server  > /dev/null 2>&1
-        echo "INFO: Cleaned exited container"
+        echo "INFO: Cleaned exited container."
     fi
     # run your container
-    echo "INFO: Deploying Minecraft server Docker container"
+    echo "INFO: Deploying Minecraft server Docker container."
     sudo docker run -d -it -p 25565:25565 --name mc-server  -e EULA=TRUE --restart unless-stopped -v /etc/mc-server/minecraft-data:/data itzg/minecraft-server > /dev/null 2>&1
 fi
 # Setting up server backup job
 sudo cp mc-backup.sh /usr/bin/mc-backup.sh
-echo "INFO: Minecraft server installation script finished"
-echo "Minecraft server information:
+echo "INFO: Minecraft server installation script finished."
+echo "##### Minecraft server information #####
 Minecraft server endpoint:
 $external_ip:25565
 
