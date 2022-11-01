@@ -3,7 +3,33 @@
 Install Minecraft server on ARM architecture using Oracle Cloud Infrastructure.
 
 The server will be installed as a container using the Docker client and will retain the server's data in the directory '/home/$USER/minecraft-data', by default. 
-To evert data loss when the server encounters applicative issues or data corruption, the 'mc-backup.sh' script will run on a daily basis, using a CRON job backing up the server's data to the directory '/home/$USER/minecraft-backup' and will keep 5 snapshots of the data (to modify the snapshots count, read more under 'Server Usage').
+To evert data loss when the server encounters applicative issues or data corruption, the 'mc-backup' script will run on a daily basis, using a CRON job backing up the server's data to the directory '/home/$USER/minecraft-backup' and will keep snapshots of data older less than 10 days.
+
+# Server Usage
+To learn more on modifying the server configurations using the /etc/mc-server/minecraft-data/server.properties file, read more here - https://minecraft.fandom.com/wiki/Server.properties#Minecraft_server_properties
+
+To restart the mc-server, run the following command:
+```bash
+$ docker restart mc-server
+```
+
+For viewing server logs:
+```bash
+docker logs mc-server
+```
+
+To delete the mc-server Docker container:
+```bash
+docker rm -f mc-server
+```
+
+Restore server backup:
+```bash
+mc-restore
+```
+
+The retore command will take the latest mc-server snapshot and restore it to the Minecraft /home/$USER/minecraft-data data directory.
+The restoration process will stop the Docker container, delete the current data residing in /home/$USER/minecraft-data, and restore the latest snapshot located under the /home/$USER/minecraft-backup directory.
 
 # Server Configuration
 ### Machine access
@@ -72,30 +98,4 @@ if [ ! "$(docker ps -q -f name=mc-server)" ]; then
     docker run -d -it -p 25565:25565 --name mc-server --restart unless-stopped -v /home/$USER/minecraft-data:/data itzg/minecraft-server
 fi
 echo "INFO: Minecraft server installation script finished"
-```
-
-# Server Usage
-To learn more on modifying the server configurations using the /etc/mc-server/minecraft-data/server.properties file, read more here - https://minecraft.fandom.com/wiki/Server.properties#Minecraft_server_properties
-
-To restart the mc-server, run the following command:
-```bash
-$ docker restart mc-server
-```
-
-For viewing server logs:
-```bash
-docker logs mc-server
-```
-
-To delete the mc-server Docker container:
-```bash
-docker rm -f mc-server
-```
-
-Restore server backup:
-```bash
-tar -tzvf /mnt/backup/host-Monday.tgz
-tar -xzvf /mnt/backup/host-Monday.tgz -C /tmp etc/hosts
-cd /
-sudo tar -xzvf /mnt/backup/host-Monday.tgz
 ```

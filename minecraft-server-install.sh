@@ -9,6 +9,15 @@ if [[ $(/usr/bin/id -u) -ne 0 ]]; then
     exit
 fi
 
+# Verify figlet
+if [ -x "$(command -v figlet)" ]; then
+    # pass
+else
+    echo "INFO: Installing script prerequisites."
+    sudo apt update
+    sudo apt install figlet -y
+fi
+
 external_ip=$(dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com)
 figlet Minecraft Installation
 
@@ -22,7 +31,7 @@ else
 fi
 
 sudo apt update  > /dev/null 2>&1
-sudo apt install apt-transport-https curl gnupg-agent ca-certificates software-properties-common figlet -y  > /dev/null 2>&1
+sudo apt install apt-transport-https curl gnupg-agent ca-certificates software-properties-common -y  > /dev/null 2>&1
 
 # Install Docker
 if [ -x "$(command -v docker)" ]; then
@@ -75,13 +84,13 @@ if [ ! "$(docker ps -q -f name=mc-server)" ]; then
 fi
 # Setting up server backup command and job
 echo "INFO: Copying mc-backup script to bin directory"
-sudo cp mc-backup.sh /usr/bin/mc-backup.sh
-sudo chmod +x /usr/bin/mc-backup.sh
+sudo cp mc-backup.sh /usr/bin/mc-backup
+sudo chmod +x /usr/bin/mc-backup
 echo "INFO: Setting backup script with cron"
 #write out current crontab
 crontab -l > mc-cron
 #echo new cron into cron file
-echo "0 0 * * * mc-backup.sh" >> mc-cron
+echo "0 0 * * * mc-backup" >> mc-cron
 #install new cron file
 crontab mc-cron
 echo "INFO: Successfully setup cron job to automate backups."
@@ -89,8 +98,8 @@ echo "INFO: Removing temp cron file."
 rm mc-cron
 # Setting up server restore command
 echo "INFO: Copying mc-restore script to bin directory"
-sudo cp mc-restore.sh /usr/bin/mc-restore.sh
-sudo chmod +x /usr/bin/mc-restore.sh
+sudo cp mc-restore.sh /usr/bin/mc-restore
+sudo chmod +x /usr/bin/mc-restore
 
 echo "INFO: Minecraft server installation script finished."
 echo "

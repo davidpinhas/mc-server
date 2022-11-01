@@ -20,8 +20,12 @@ dest="/home/$USER/minecraft-backup"
 
 # Create archive filename.
 current_date=$(date '+%H-%M-%S-%Y-%m-%d')
-
 archive_file="mc-bkp-$current_date.tgz"
+
+# Define number days to retain snapshots.
+backup_age="10"
+find "$dest" -type f -mtime +$backup_age -delete
+echo "INFO: Deleting old backup files"
 
 # Print start status message.
 echo "INFO: Backing up $backup_files to $dest/$archive_file"

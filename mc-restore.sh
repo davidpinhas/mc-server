@@ -1,12 +1,13 @@
-###################################
+####################################
 ##### Minecraft Restore Script #####
-###################################
+####################################
 
 # Location of Minecraft server data
 backup_files="/home/$USER/minecraft-backup"
 
 # Where to backup to.
-if [ -d "/home/$USER/minecraft-backup" ] 
+if [ ! -d "/home/$USER/minecraft-backup" ] 
+then
     echo "ERROR: Directory '/home/$USER/minecraft-backup' does not exists."
     exit
 fi
@@ -18,8 +19,15 @@ echo "INFO: Restoring $backup_files/$latest_backup to $dest"
 date
 echo
 
+echo "INFO: Stoping mc-server Docker container"
+sudo docker stop mc-server
 # Restore the files using tar.
-tar -zvxf $backup_files/$latest_backup $dest/.
+echo "INFO: Deleting data from mc-server data from /home/$USER/minecraft-data directory."
+rm -rf $dest/*
+echo "INFO: Extracting the latest $latest_backup backup snapshot"
+tar -zvxf $backup_files/$latest_backup $dest
+echo "INFO: Starting mc-server Docker container"
+sudo docker start mc-server
 
 # Print end status message.
 echo
