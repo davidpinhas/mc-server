@@ -9,17 +9,17 @@ To evert data loss when the server encounters applicative issues or data corrupt
 ### Server maintainance
 To restart the mc-server, run the following command:
 ```bash
-$ docker restart mc-server
+sudo docker restart mc-server
 ```
 
 For viewing server logs:
 ```bash
-docker logs mc-server
+sudo docker logs mc-server
 ```
 
 To delete the mc-server Docker container:
 ```bash
-docker rm -f mc-server
+sudo docker rm -f mc-server
 ```
 
 ### Server Backup/Restore
@@ -35,7 +35,7 @@ mc-restore
 
 After a successful restore it might take a few minutes to start the server up and we should see the following at the end of the startup process:
 ```bash
-docker tail -f mc-server
+sudo docker logs -f mc-server
 ```
 ```
 [01:11:25] [Worker-Main-2/INFO]: Preparing spawn area: 96%
@@ -72,7 +72,7 @@ cd mc-server
 
 Than, run the installation script to start the MC-Server with specific memory size allocated to the service:
 ```bash
-sudo bash mc-init.sh NUMBER
+sudo bash mc-init.sh $NUMBER
 ```
 
 For example, we can pass '20' to allocate 20GB of memory for the service:
