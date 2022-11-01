@@ -6,7 +6,7 @@
 # Verify root user
 if [[ $(/usr/bin/id -u) -ne 0 ]]; then
     echo "WARN: Not Sudo user. Please run as root, using the following command:"
-    echo "$ sudo bash minecraft-server-install.sh"
+    echo "$ sudo bash mc-init.sh"
     exit
 fi
 
