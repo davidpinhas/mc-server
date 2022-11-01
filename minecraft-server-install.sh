@@ -10,9 +10,7 @@ if [[ $(/usr/bin/id -u) -ne 0 ]]; then
 fi
 
 # Verify figlet
-if [ -x "$(command -v figlet)" ]; then
-    # pass
-else
+if [ ! -x "$(command -v figlet)" ]; then
     echo "INFO: Installing script prerequisites."
     sudo apt update
     sudo apt install figlet -y
