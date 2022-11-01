@@ -40,12 +40,19 @@ To access the machine, SSH to the VM using the key for authentication:
 ssh -i ~/.ssh/mc.key user@123.123.123.123
 ```
 
+### Installation
+To install mc-server, first clone this repo:
 ```bash
 git clone https://github.com/davidpinhas/mc-server.git
+cd mc-server
 ```
 
-### Installation
-Installation script:
+Than, run the installation script:
+```bash
+sudo bash minecraft-server-install.sh
+```
+
+Full installation script:
 ```bash
 #!/bin/bash
 
