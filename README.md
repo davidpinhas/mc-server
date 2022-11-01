@@ -75,6 +75,23 @@ echo "INFO: Minecraft server installation script finished"
 ```
 
 # Server Usage
+To learn more on modifying the server configurations using the /etc/mc-server/minecraft-data/server.properties file, read more here - https://minecraft.fandom.com/wiki/Server.properties#Minecraft_server_properties
+
+To restart the mc-server, run the following command:
+```bash
+$ docker restart mc-server
+```
+
+For viewing server logs:
+```bash
+docker logs mc-server
+```
+
+To delete the mc-server Docker container:
+```bash
+docker rm -f mc-server
+```
+
 Restore server backup:
 ```bash
 tar -tzvf /mnt/backup/host-Monday.tgz

@@ -19,9 +19,9 @@ fi
 dest="/home/$USER/minecraft-backup"
 
 # Create archive filename.
-day=$(date +%A)
-hostname=$(hostname -s)
-archive_file="$hostname-$day.tgz"
+current_date=$(date '+%H-%M-%S-%Y-%m-%d')
+
+archive_file="mc-bkp-$current_date.tgz"
 
 # Print start status message.
 echo "INFO: Backing up $backup_files to $dest/$archive_file"

@@ -68,14 +68,16 @@ if [ ! "$(docker ps -q -f name=mc-server)" ]; then
     echo "INFO: Waiting for mc-server data files to copy from the Docker container."
     while [ $(ls -l /etc/mc-server/minecraft-data | wc -l) != 13 ]
     do
-        echo "INFO:" $(ls -l /etc/mc-server/minecraft-data | wc -l) echo "out of 13 copied. Waiting 5 seconds."
-        sleep 5
+        echo "INFO:" $(ls -l /etc/mc-server/minecraft-data | wc -l) echo "out of 13 copied. Waiting 10 seconds."
+        sleep 10
     done
+    echo "INFO: Successfully copied data files to /etc/mc-server/minecraft-data directory."
 fi
-# Setting up server backup job
-echo "INFO: Copying backup script to bin directory"
+# Setting up server backup command and job
+echo "INFO: Copying mc-backup script to bin directory"
 sudo cp mc-backup.sh /usr/bin/mc-backup.sh
-echo "Setting backup script with cron"
+sudo chmod +x /usr/bin/mc-backup.sh
+echo "INFO: Setting backup script with cron"
 #write out current crontab
 crontab -l > mc-cron
 #echo new cron into cron file
@@ -85,6 +87,10 @@ crontab mc-cron
 echo "INFO: Successfully setup cron job to automate backups."
 echo "INFO: Removing temp cron file."
 rm mc-cron
+# Setting up server restore command
+echo "INFO: Copying mc-restore script to bin directory"
+sudo cp mc-restore.sh /usr/bin/mc-restore.sh
+sudo chmod +x /usr/bin/mc-restore.sh
 
 echo "INFO: Minecraft server installation script finished."
 echo "
