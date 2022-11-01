@@ -5,7 +5,7 @@
 ###################################
 
 # Location of Minecraft server data
-backup_files="/home/$USER/minecraft-data"
+backup_files="/etc/mc-server/minecraft-data"
 
 # Where to backup to.
 if [ -d "/home/$USER/minecraft-backup" ] 
