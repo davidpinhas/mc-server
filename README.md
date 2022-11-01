@@ -8,6 +8,10 @@ To evert data loss when the server encounters applicative issues or data corrupt
 # Server Usage
 To learn more on modifying the server configurations using the /etc/mc-server/minecraft-data/server.properties file, read more here - https://minecraft.fandom.com/wiki/Server.properties#Minecraft_server_properties
 
+In order to modify the mc-server configuration file, run:
+```bash
+
+```
 To restart the mc-server, run the following command:
 ```bash
 $ docker restart mc-server
@@ -26,6 +30,19 @@ docker rm -f mc-server
 Restore server backup:
 ```bash
 mc-restore
+```
+
+After a successful restore it might take a few minutes to start the server up and we should see the following at the end of the startup process:
+```bash
+docker tail -f mc-server
+```
+```
+[01:11:25] [Worker-Main-2/INFO]: Preparing spawn area: 96%
+[01:11:25] [Worker-Main-1/INFO]: Preparing spawn area: 97%
+[01:11:26] [Worker-Main-1/INFO]: Preparing spawn area: 98%
+[01:11:26] [Worker-Main-2/INFO]: Preparing spawn area: 98%
+[01:11:27] [Server thread/INFO]: Time elapsed: 101506 ms
+[01:11:27] [Server thread/INFO]: Done (164.863s)! For help, type "help"
 ```
 
 The retore command will take the latest mc-server snapshot and restore it to the Minecraft /home/$USER/minecraft-data data directory.

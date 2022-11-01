@@ -23,9 +23,9 @@ echo "INFO: Stoping mc-server Docker container"
 sudo docker stop mc-server
 # Restore the files using tar.
 echo "INFO: Deleting data from mc-server data from /etc/mc-server/minecraft-data directory."
-rm -rf $dest/*
+sudo rm -rf $dest/*
 echo "INFO: Extracting the latest $latest_backup backup snapshot"
-tar -zvxf $backup_files/$latest_backup $dest
+sudo tar -zvxf $backup_files/$latest_backup $dest
 echo "INFO: Starting mc-server Docker container"
 sudo docker start mc-server
 
