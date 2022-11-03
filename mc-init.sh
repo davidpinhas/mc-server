@@ -207,11 +207,11 @@ fi
 if [ $# -ge 1 ]; then
     memory_count+="${memory_limit}000m"
     echo "INFO: Deploying Minecraft server Docker container with ${memory_count} memory limit."
-    sudo docker run -d -it -p 25565:25565 --name mc-server -e EULA=TRUE -e MEMORY="" -e JVM_XX_OPTS="-XX:MaxRAMPercentage=100" -m $memory_count --restart unless-stopped -v /etc/mc-server/minecraft-data:/data itzg/minecraft-server > /dev/null 2>&1
+    sudo docker run -d -it --cpus="2.0" --memory="${memory_limit}g" -p 25565:25565 --name mc-server -e EULA=TRUE -e MEMORY=${memory_limit}G -e INIT_MEMORY=4G -e MAX_MEMORY=${memory_limit}G -e JVM_XX_OPTS="-XX:+UseG1GC" -m $memory_count --restart unless-stopped -v /etc/mc-server/minecraft-data:/data itzg/minecraft-server > /dev/null 2>&1
 else
     echo "WARN: Didn't provide memory limit on script startup. Running with default."
     memory_count="4000m"
-    sudo docker run -d -it -p 25565:25565 --name mc-server -e EULA=TRUE -e MEMORY="" -e JVM_XX_OPTS="-XX:MaxRAMPercentage=100" -m $memory_count --restart unless-stopped -v /etc/mc-server/minecraft-data:/data itzg/minecraft-server > /dev/null 2>&1
+    sudo docker run -d -it --cpus="2.0" --memory="${memory_limit}g" -p 25565:25565 --name mc-server -e EULA=TRUE -e MEMORY=4G -e INIT_MEMORY=2G -e MAX_MEMORY=4G -e JVM_XX_OPTS="-XX:+UseG1GC" -m $memory_count --restart unless-stopped -v /etc/mc-server/minecraft-data:/data itzg/minecraft-server > /dev/null 2>&1
 fi
 echo "INFO: Waiting for mc-server data files to copy from the Docker container."
 while [ $(ls -l /etc/mc-server/minecraft-data | wc -l) != 13 ]
