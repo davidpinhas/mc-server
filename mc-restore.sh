@@ -36,7 +36,7 @@ sudo tar -zvxf $backup_files/$latest_backup -C mc-tmp
 sudo cp -r mc-tmp$dest/* $dest/.
 echo "INFO: Starting mc-server Docker container."
 sudo docker start mc-server
-sudo rm mc-tmp
+sudo rm -rf mc-tmp
 startup_status=$(sudo docker inspect -f {{.State.Health.Status}} mc-server)
 while [ "$(sudo docker inspect -f {{.State.Health.Status}} mc-server | grep -wh "healthy")" != "healthy" ]; do
   echo "INFO: Startup in progress. Current state is '$startup_status'."
